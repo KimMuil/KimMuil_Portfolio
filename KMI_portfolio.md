@@ -1,7 +1,10 @@
 # 자기소개 및 비전
-<img src="https://github.com/user-attachments/assets/3c4872de-ff90-4066-901e-a4c315a21c92" width="200" height="250"/> 안녕하세요, 네트워크 엔지니어의 꿈을 꾸고 있는 김무일 입니다.
-
-
+<table>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/3c4872de-ff90-4066-901e-a4c315a21c92" alt="안녕하세요, 네트워크 엔지니어의 꿈을 꾸고 있는 김무일 입니다." width="200" height="250"></td>
+    <td>이미지 옆에 있는 텍스트입니다.</td>
+  </tr>
+</table>
 
 ---
 
