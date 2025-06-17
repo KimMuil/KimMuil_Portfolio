@@ -503,10 +503,259 @@ Switch(config)# spanning-tree vlan 10 priority 4096
 Switch(config)# spanning-tree vlan 20 priority 8192
 ```
 
-### 확인 방법   
+### 확인 방법 
+```bash
 Switch# show spanning-tree vlan 10
 Switch# show spanning-tree summary
+```
 
+---
 
+## 12. DTP (Dynamic Trunking Protocol)
 
+###  DTP란?
 
+> **DTP(Dynamic Trunking Protocol)**는 Cisco 스위치 간의 링크에서 **자동으로 트렁크 링크를 설정**하거나 **액세스 모드로 설정**할 수 있도록 도와주는 **Cisco 독자 프로토콜**입니다.
+
+---
+
+###  특징
+
+- 두 스위치가 DTP를 통해 **자동으로 트렁크 모드 협상** 가능
+- 기본적으로는 **동적으로 트렁크 또는 액세스 모드 결정**
+- **Cisco 장비 간에만 동작**
+- **보안상 비활성화하는 것이 권장되는 경우도 있음**
+
+---
+
+###  DTP 모드 종류
+
+| 모드          | 설명 |
+|---------------|------|
+| **dynamic auto** | 상대가 트렁크로 요청하면 트렁크로 전환 (수동 수락) |
+| **dynamic desirable** | 트렁크 모드를 **능동적으로 협상** |
+| **trunk** | 수동으로 트렁크로 고정 |
+| **access** | 수동으로 액세스 모드로 고정 |
+| **nonegotiate** | DTP를 **완전히 비활성화** (수동 설정만 사용 가능) |
+
+---
+
+###  설정 예시
+
+> 포트를 trunk 모드로 고정하고, DTP를 비활성화하는 예시입니다.
+
+```bash
+Switch(config)# interface fastEthernet 0/1
+Switch(config-if)# switchport mode trunk
+Switch(config-if)# switchport nonegotiate
+```
+---
+
+## 13. RSTP (Rapid Spanning Tree Protocol)
+
+### RSTP란
+
+RSTP(Rapid Spanning Tree Protocol)는 기존의 STP보다 더 빠르게 포트 전환을 처리하도록 개선된 프로토콜입니다.  
+IEEE 802.1w 표준이며, 기존 STP(802.1D)의 모든 기능을 포함하면서도 전환 속도를 대폭 향상시켰습니다.
+
+---
+
+### 주요 특징
+
+- IEEE 802.1w 표준
+- STP 대비 포트 전환 속도가 수 초에서 수 밀리초로 단축
+- 디자인은 동일하지만, 포트 역할과 상태가 변경됨
+- Cisco 장비에서 PVST+ 기반으로 사용 가능
+
+---
+
+### STP vs RSTP 포트 상태 비교
+
+| STP 포트 상태    | RSTP 포트 상태   |
+|------------------|------------------|
+| Blocking         | Discarding       |
+| Listening        | Discarding       |
+| Learning         | Learning         |
+| Forwarding       | Forwarding       |
+| Disabled         | Discarding       |
+
+---
+
+### 설정 예시 (글로벌 설정)
+
+스위치에서 RSTP 모드(PVST+)를 활성화합니다.
+
+```bash
+Switch(config)# spanning-tree mode rapid-pvst
+```
+
+### 확인 명령어
+
+```bash
+Switch# show spanning-tree
+Switch# show spanning-tree vlan 10
+Switch# show spanning-tree summary
+```
+
+---
+
+## 14. EtherChannel
+
+### EtherChannel이란
+
+EtherChannel은 여러 개의 물리적 포트를 하나의 논리적 포트로 묶어 대역폭을 증가시키고, 링크 장애 시에도 자동으로 트래픽을 분산시키는 기술입니다.  
+스패닝 트리 프로토콜(STP)은 EtherChannel을 하나의 링크로 인식하므로, 포트 차단 없이 모든 링크를 사용할 수 있습니다.
+
+---
+
+### 주요 특징
+
+- 두 장비 간 **2개 이상의 포트를 하나의 논리 링크로 묶음**
+- **대역폭 향상**, **링크 백업(가용성)** 효과
+- STP에 의해 하나의 포트로 인식되어 **포트 차단 현상이 발생하지 않음**
+- Cisco는 **PAgP**, **LACP**라는 프로토콜을 통해 EtherChannel을 자동 구성 가능
+
+---
+
+### 구성 방식 비교
+
+| 방식     | 설명                                 | 표준 여부      |
+|----------|--------------------------------------|----------------|
+| PAgP     | Cisco 고유 프로토콜                  | 비표준 (Cisco만) |
+| LACP     | IEEE 802.3ad 표준 프로토콜           | 표준           |
+| 수동     | 명령어로 강제 설정                   | 프로토콜 사용 안 함 |
+
+---
+
+### 설정 예시 (LACP 기반 EtherChannel 구성)
+
+스위치 A와 B의 포트 fa0/1, fa0/2를 묶어 EtherChannel로 구성하는 예시입니다.
+
+```bash
+Switch(config)# interface range fa0/1 - 2
+Switch(config-if-range)# channel-group 1 mode active
+Switch(config-if-range)# exit
+Switch(config)# interface port-channel 1
+Switch(config-if)# switchport mode trunk
+```
+### 확인 명령어 
+
+```bash
+Switch# show etherchannel summary
+Switch# show running-config interface port-channel 1
+Switch# show interfaces port-channel 1
+```
+
+---
+
+## 15. NAT (Network Address Translation)
+
+### NAT란
+
+NAT는 사설 IP 주소를 공인 IP 주소로 변환하여 내부 네트워크와 외부 인터넷 간 통신이 가능하게 해주는 기술입니다.  
+주로 IPv4 주소 부족 문제 해결, 내부 주소 보호, 외부 통신 가능 등의 목적으로 사용됩니다.
+
+---
+
+### NAT의 기본 개념
+
+- Inside Local: 내부 사설 IP 주소 (예: 192.168.x.x)  
+- Inside Global: 외부에서 보이는 공인 IP 주소  
+- Outside Local: 내부에서 보는 외부 IP 주소  
+- Outside Global: 실제 외부 공인 IP 주소  
+
+---
+
+### NAT의 세 가지 유형
+
+| 종류           | 설명                                                         |
+|----------------|--------------------------------------------------------------|
+| Static NAT     | 하나의 사설 IP ↔ 하나의 공인 IP (고정 매핑)                 |
+| Dynamic NAT    | 사설 IP를 공인 IP 풀 중 하나로 동적으로 매핑                |
+| PAT (Overload) | 여러 사설 IP를 하나의 공인 IP와 포트번호로 구분하여 매핑   |
+
+---
+
+## 15-1. Static NAT
+
+### 특징
+
+- IP 주소가 고정적으로 1:1로 매핑됨  
+- 내부 서버를 외부에 노출할 때 주로 사용
+
+### 설정 예시
+
+```bash
+! 내부 서버: 192.168.10.10
+! 외부 공인 IP: 203.0.113.10
+
+Router(config)# ip nat inside source static 192.168.10.10 203.0.113.10
+
+Router(config)# interface fa0/1
+Router(config-if)# ip nat inside
+Router(config-if)# exit
+
+Router(config)# interface fa0/0
+Router(config-if)# ip nat outside
+Router(config-if)# exit
+```
+---
+
+## 15-2. Dynamic NAT (Pool 기반)
+
+### 특징
+
+- 내부 IP를 공인 IP 풀에서 동적으로 할당  
+- 공인 IP 풀을 초과하면 NAT 실패
+
+### 설정 예시
+
+```bash
+! 공인 IP 풀 설정
+Router(config)# ip nat pool PUBLIC_POOL 203.0.113.100 203.0.113.110 netmask 255.255.255.0
+
+! NAT 대상 지정 ACL 생성
+Router(config)# access-list 1 permit 192.168.10.0 0.0.0.255
+
+! ACL과 풀을 연동
+Router(config)# ip nat inside source list 1 pool PUBLIC_POOL
+
+! 인터페이스 NAT 설정
+Router(config)# interface fa0/1
+Router(config-if)# ip nat inside
+Router(config-if)# exit
+
+Router(config)# interface fa0/0
+Router(config-if)# ip nat outside
+Router(config-if)# exit
+
+```
+
+---
+
+## 15-3. PAT (Port Address Translation, NAT Overload)
+
+### 특징
+
+- 여러 내부 사설 IP를 하나의 공인 IP와 포트 번호로 변환  
+- 하나의 공인 IP로 다수의 장비가 동시에 인터넷 사용 가능  
+- 가장 많이 사용되는 NAT 방식
+
+### 설정 예시
+
+```bash
+! NAT 대상 지정 ACL 생성
+Router(config)# access-list 1 permit 192.168.10.0 0.0.0.255
+
+! PAT 설정
+Router(config)# ip nat inside source list 1 interface fa0/0 overload
+
+! 인터페이스 NAT 설정
+Router(config)# interface fa0/1
+Router(config-if)# ip nat inside
+Router(config-if)# exit
+
+Router(config)# interface fa0/0
+Router(config-if)# ip nat outside
+Router(config-if)# exit
+```
