@@ -465,6 +465,47 @@ Switch# show spanning-tree
 | **RSTP** (802.1w) | 빠른 복구 시간 |
 | **PVST+** | Cisco 독자, VLAN 별 STP 실행 |
 
+---
+
+## 11. PVST (Per VLAN Spanning Tree)
+
+###  PVST란?
+
+> **PVST**는 Cisco에서 지원하는 **VLAN 단위의 Spanning Tree Protocol**입니다.  
+> 일반 STP와 달리 **VLAN마다 별도의 스패닝 트리 인스턴스를 생성**하여, VLAN별로 최적 경로를 설정할 수 있습니다.
+
+---
+
+###  특징
+
+- **VLAN 단위로 STP 인스턴스를 운영** (예: VLAN 10용, VLAN 20용 각각 따로)
+- 트래픽 부하를 분산시키기 위한 **로드 밸런싱** 가능
+- **Cisco 독자 기술**로, 기본 STP에서 확장된 형태
+- **802.1D 기반**
+
+---
+
+###  PVST vs STP 비교
+
+| 항목          | STP (기본형)             | PVST (Per VLAN STP)                |
+|---------------|--------------------------|------------------------------------|
+| 지원 범위     | 전체 네트워크 단일 트리     | VLAN별로 각각 트리 운영              |
+| 부하 분산     | 불가능                    | VLAN별로 분산 가능                   |
+| 설정 유연성   | 제한적                    | VLAN마다 별도 설정 가능              |
+| 제조사        | 표준 (IEEE 802.1D)         | Cisco 전용                         |
+
+---
+
+###  설정 예시 (VLAN 10, VLAN 20에 대해 PVST 설정)
+
+```bash
+Switch(config)# spanning-tree vlan 10 priority 4096
+Switch(config)# spanning-tree vlan 20 priority 8192
+```
+
+### 확인 방법   
+Switch# show spanning-tree vlan 10
+Switch# show spanning-tree summary
 
 
 
