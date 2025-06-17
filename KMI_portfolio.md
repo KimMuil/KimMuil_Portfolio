@@ -12,6 +12,7 @@
 # 기술 스택
 
 - 네트워크 [CIsco Packet Tracer](https://github.com/KimMuil/KimMuil_Portfolio/blob/main/Kimmuil_portfolio.md)
+- 리눅스 [LINUX]
 
 ---
 
@@ -25,7 +26,7 @@
 
 # 온라인 수강
 
----
+---tyuawtyu
 
 # 오프라인 수강
 
