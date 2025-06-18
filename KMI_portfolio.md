@@ -14,7 +14,7 @@
 # 기술 스택
 
 - 네트워크 [CIsco Packet Tracer](https://github.com/KimMuil/KimMuil_Portfolio/blob/main/Network.md)
-- 리눅스 [LINUX](https://github.com/KimMuil/KimMuil_Portfolio/blob/main/LINUX)
+- 리눅스 [LINUX](https://github.com/KimMuil/KimMuil_Portfolio/blob/main/LINUX.md)
 
 ---
 
