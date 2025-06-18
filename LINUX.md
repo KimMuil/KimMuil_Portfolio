@@ -1,4 +1,4 @@
-<center> # LINUX 학습노트 </center>
+# LINUX 학습노트
 
 ---
 
